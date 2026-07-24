@@ -14,6 +14,8 @@ from src.metrics import (
 )
 from src.preprocessing import prepare_cases_data
 
+from src.config import APP_NAME, VERSION
+
 
 # ============================================================
 # CONFIGURACIÓN GENERAL
@@ -985,3 +987,18 @@ with detail_tab:
             "spreadsheetml.sheet"
         ),
     )
+
+
+# ============================================================
+# FOOTER
+# ============================================================
+
+st.sidebar.divider()
+
+st.sidebar.caption(
+    f"{APP_NAME}"
+)
+
+st.sidebar.caption(
+    f"Versión {VERSION}"
+)
