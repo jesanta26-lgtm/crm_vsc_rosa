@@ -52,7 +52,7 @@ def prepare_cases_data(df: pd.DataFrame) -> pd.DataFrame:
         subset=required_dates
     ).copy()
 
-    data["Tiempo atención (Hrs)"] = (
+    data["Tiempo en VSC (Hrs)"] = (
         data["Fecha de resolución"]
         - data["Fecha atendió Facturación"]
     ).dt.total_seconds() / 3600
@@ -62,15 +62,15 @@ def prepare_cases_data(df: pd.DataFrame) -> pd.DataFrame:
         - data["Fecha de apertura"]
     ).dt.total_seconds() / 3600
 
-    data["Tiempo espera atención (Hrs)"] = (
+    data["Tiempo en Facturación (Hrs)"] = (
         data["Fecha atendió Facturación"]
         - data["Fecha de apertura"]
     ).dt.total_seconds() / 3600
 
     data = data[
-        (data["Tiempo atención (Hrs)"] >= 0)
+        (data["Tiempo en VSC (Hrs)"] >= 0)
         & (data["Tiempo total caso (Hrs)"] >= 0)
-        & (data["Tiempo espera atención (Hrs)"] >= 0)
+        & (data["Tiempo en Facturación (Hrs)"] >= 0)
     ].copy()
 
     data["Año"] = data["Fecha de apertura"].dt.year
@@ -105,7 +105,7 @@ def prepare_cases_data(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     data["Rango SLA"] = pd.cut(
-        data["Tiempo atención (Hrs)"],
+        data["Tiempo en VSC (Hrs)"],
         bins=[
             float("-inf"),
             0.5,

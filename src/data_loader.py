@@ -1,43 +1,40 @@
-from pathlib import Path
+from typing import BinaryIO
 
 import pandas as pd
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DATA_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "raw"
-    / "Casos resueltos VSC 22-07-2026 13-16-49.xlsx"
-)
-
-
-def load_cases_data(file_path: Path | str = DATA_PATH) -> pd.DataFrame:
+def load_cases_data(
+    source: BinaryIO,
+) -> pd.DataFrame:
     """
-    Carga la base de casos desde un archivo Excel.
+    Carga la base de casos desde un archivo Excel cargado
+    mediante Streamlit.
 
     Parameters
     ----------
-    file_path:
-        Ruta del archivo Excel.
+    source:
+        Archivo cargado por el usuario desde st.file_uploader.
 
     Returns
     -------
     pd.DataFrame
-        DataFrame con los casos registrados.
+        DataFrame con la información de los casos.
     """
-    file_path = Path(file_path)
-
-    if not file_path.exists():
-        raise FileNotFoundError(
-            f"No se encontró el archivo: {file_path}"
+    if source is None:
+        raise ValueError(
+            "No se recibió ningún archivo para procesar."
         )
 
     try:
         return pd.read_excel(
-            file_path,
+            source,
             engine="openpyxl",
         )
+
+    except ValueError as error:
+        raise ValueError(
+            "El archivo no tiene un formato Excel válido."
+        ) from error
 
     except Exception as error:
         raise RuntimeError(
