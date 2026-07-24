@@ -11,6 +11,11 @@ def create_weekly_volume_chart(
         .size()
         .rename("Casos")
         .reset_index()
+        .sort_values("Semana")
+    )
+
+    weeks = sorted(
+        cases_by_week["Semana"].unique()
     )
 
     figure = px.bar(
@@ -25,8 +30,17 @@ def create_weekly_volume_chart(
         textposition="outside"
     )
 
+    figure.update_xaxes(
+        tickmode="array",
+        tickvals=weeks,
+        ticktext=[
+            str(week)
+            for week in weeks
+        ],
+    )
+
     figure.update_layout(
-        xaxis_title="Semana",
+        xaxis_title="Número de semana",
         yaxis_title="Número de casos",
         showlegend=False,
     )
@@ -63,6 +77,10 @@ def create_sla_distribution_chart(
 def create_capacity_chart(
     weekly_report: pd.DataFrame,
 ) -> go.Figure:
+    weeks = sorted(
+        weekly_report["Semana"].unique()
+    )
+
     figure = go.Figure()
 
     figure.add_trace(
@@ -86,9 +104,18 @@ def create_capacity_chart(
         )
     )
 
+    figure.update_xaxes(
+        tickmode="array",
+        tickvals=weeks,
+        ticktext=[
+            str(week)
+            for week in weeks
+        ],
+    )
+
     figure.update_layout(
         title="Capacidad efectiva vs. horas consumidas",
-        xaxis_title="Semana",
+        xaxis_title="Número de semana",
         yaxis_title="Horas",
     )
 
